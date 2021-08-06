@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <ezButton.h>
 #include "Keyboard.h"
 
 //Definition Pins
@@ -6,54 +7,26 @@
 
 #define PASSWORD "Password"
 
-//globale Variablen
-byte buttonState = 0;
-
-//SW Entprellung Taster
-bool isButtonPressed(byte buttonPin)
-{
-  byte buttonValue = digitalRead(buttonPin);
-
-  if(buttonState == 0 && buttonValue == HIGH)
-  {
-    // Taster wird gedrückt (steigende Flanke)
-    buttonState = 1;
-    return true;
-  }
-  else if (buttonState == 1 && buttonValue == HIGH)
-  {
-    // Taster wird gehalten
-    buttonState = 2;
-    return false;
-  }
-  else if (buttonState == 2 && buttonValue == LOW)
-  {
-    // Taster wird losgelassen (fallende Flanke)
-    buttonState = 3;
-    return false;
-  }
-  else if (buttonState == 3 && buttonValue == LOW)
-  {
-    // Taster losgelassen
-    buttonState = 0;
-    return false;
-  }
-}
-
+ezButton button(PIN_BUTTON);  // create ezButton object that attach to pin 7;
 
 void setup()
 {
-  //Initialisierung Buttons
-  pinMode(PIN_BUTTON, INPUT);
+  //pinMode(PIN_BUTTON, INPUT);
+  button.setDebounceTime(50); // set debounce time to 50 milliseconds
   Keyboard.begin();
 }
 
-void loop()
-{
-  //Knopf gedrückt --> PW schreiben
-  if(isButtonPressed == true)
+void loop() {
+  button.loop(); // MUST call the loop() function first
+
+  if(button.isPressed())
   {
     //Sende Passwort
     Keyboard.print(PASSWORD);
+  }
+
+  if(button.isReleased())
+  {
+    //no action
   }
 }
