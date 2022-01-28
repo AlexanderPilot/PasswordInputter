@@ -7,7 +7,7 @@
 
 #define PASSWORD "Password"
 
-ezButton button(PIN_BUTTON);  // create ezButton object that attach to pin 7;
+ezButton button(PIN_BUTTON);  // create ezButton object that attach to pin PIN_BUTTON;
 
 void setup()
 {
